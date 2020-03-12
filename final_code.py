@@ -90,8 +90,8 @@ def main():
     sns.set()
     data = pd.read_csv('arrests.csv')
     data = make_booleans(data)
-    # yearly_average(data)
-    # weekly_average(data)
+    yearly_average(data)
+    weekly_average(data)
     plot_winning_arrests_season(data)
     plot_winning_arrests_total(data)
 
