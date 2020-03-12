@@ -19,7 +19,7 @@ def yearly_average(data):
     Takes in the data and creates a plot of the average number of arrest for each year in the dataset.
     """
     df = data.groupby('season')['arrests'].mean()
-    sns.catplot(x='season', y='arrests', data=df.reset_index(), kind='bar')
+    sns.catplot(x='season', y='arrests', data=df.reset_index(), kind='bar', )
     plt.ylabel('average arrests')
     plt.title('Average Arrests per Game each Season')
     plt.savefig('yearly_average.png', bbox_inches='tight')
@@ -80,9 +80,9 @@ def plot_winning_arrests_total(df):
     sns.catplot(x='winning', y='arrests',
                 data=result.reset_index(), kind='bar')
     plt.xticks(np.arange(2), ['Losing Team', 'Winning Team'])
-    plt.xlabel('4 Year Average')
+    plt.xlabel('5 Year Average')
     plt.ylabel('average arrests')
-    plt.title('Average Arrests per Game (4 Year Total)')
+    plt.title('Average Arrests per Game (5 Year Total)')
     plt.savefig('winning_arrests_total.png', bbox_inches='tight')
 
 
