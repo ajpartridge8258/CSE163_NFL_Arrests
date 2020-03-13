@@ -107,11 +107,11 @@ def plot_quartile_season_arrests(df):
     3 (weeks 10-14), 4 (weeks 15-17).
 
     """
-    df['quartile'] = df['week_num']//5 
+    df['quartile'] = df['week_num']//5
     df['quartile'] = df['quartile'] + 1
     filtered = df[['arrests', 'quartile']]
     result = filtered.groupby('quartile')['arrests'].mean()
-    sns.catplot(x='quartile', y='arrests', kind='bar', 
+    sns.catplot(x='quartile', y='arrests', kind='bar',
                 data=result.reset_index())
     plt.title("Average Arrests per Week in Season")
     plt.xlabel('Quartile of Season')
@@ -131,7 +131,7 @@ def plot_day_of_week_arrests(df, no_wednesday):
     if(no_wednesday):
         filtered = df[df['day_of_week'] != 'Wednesday']
     result = filtered.groupby('day_of_week')['arrests'].mean()
-    sns.catplot(x='day_of_week', y='arrests', kind='bar', 
+    sns.catplot(x='day_of_week', y='arrests', kind='bar',
                 data=result.reset_index())
     plt.title("Average Arrests per Day of the Week")
     plt.xlabel('Day of the Week')
@@ -153,10 +153,10 @@ def plot_time_of_game_arrests(df):
     df['time_of_game_hour'] = df['time_of_game_hour'].str[:2]
     filtered = df[['arrests', 'time_of_game_hour']]
     result = filtered.groupby('time_of_game_hour')['arrests'].mean()
-    sns.catplot(x='time_of_game_hour', y='arrests', kind='bar', 
+    sns.catplot(x='time_of_game_hour', y='arrests', kind='bar',
                 data=result.reset_index())
     plt.title("Average Arrests per Time of Game")
-    plt.xticks(np.arange(9), ['12pm', '1pm', '2pm', 
+    plt.xticks(np.arange(9), ['12pm', '1pm', '2pm',
                               '3pm', '4pm', '5pm',
                               '6pm', '7pm', '8pm'])
     plt.xlabel('Time of Game')
@@ -172,7 +172,7 @@ def plot_stadium_arrests(df):
     """
     filtered = df[['home_team', 'arrests']]
     result = filtered.groupby('home_team')['arrests'].mean()
-    sns.catplot(x='arrests', y='home_team', kind='bar', 
+    sns.catplot(x='arrests', y='home_team', kind='bar',
                 data=result.reset_index())
     plt.title("Average Arrests for Each NFL Stadium")
     plt.xlabel('Average Arrests')
@@ -190,13 +190,12 @@ def plot_home_team_win_arrests(df):
     df['home_team_win'] = df['home_score'] > df['away_score']
     filtered = df[['arrests', 'home_team_win']]
     result = filtered.groupby('home_team_win')['arrests'].mean()
-    sns.catplot(x='home_team_win', y='arrests', kind='bar', 
+    sns.catplot(x='home_team_win', y='arrests', kind='bar',
                 data=result.reset_index())
     plt.title("Average Arrests Compared to a Home Team Win")
     plt.xlabel('Home Team Win')
     plt.ylabel('Average Arrests')
     plt.savefig('home_team_win_arrest.png', bbox_inches='tight')
-
 
 
 def plot_score_difference_arrests(df):
@@ -211,16 +210,37 @@ def plot_score_difference_arrests(df):
     df['score_difference'] = df['home_score'] - df['away_score']
     filtered = df[['arrests', 'score_difference']]
     result = filtered.groupby('score_difference')['arrests'].mean()
-    sns.relplot(x='score_difference', y='arrests', kind='line',  
+    sns.relplot(x='score_difference', y='arrests', kind='line',
                 data=result.reset_index())
     plt.title("Average Arrests Compared to Final Score Difference")
     plt.xlabel('Final Score Difference (negative number implies a home team loss)')
     plt.ylabel('Average Arrests')
     plt.savefig('score_difference_arrest.png', bbox_inches='tight')
 
+
 def categorical_score_difference(df):
-    df['score_difference'] = abs(df['home_score'] - df['away_score'])
-    print(df)
+    """
+    Takes in the dataframe and creates a new column that categorizes the score
+    difference by field goal, one score, two score, or blowout. Then creates a
+    bar plot of the categorical score differences vs the average number of
+    arrests at games with those differences.
+    """
+    df['score_diff'] = abs(df['home_score'] - df['away_score'])
+    df['score_cat'] = 'tie'
+    df.loc[df['score_diff'] <= 3, 'score_cat'] = 'field goal'
+    df.loc[(df['score_diff'] > 3) & (
+        df['score_diff'] <= 8), 'score_cat'] = 'one score'
+    df.loc[(df['score_diff'] > 8) & (
+        df['score_diff'] <= 16), 'score_cat'] = 'two score'
+    df.loc[df['score_diff'] > 16, 'score_cat'] = 'blowout'
+    result = df.groupby('score_cat')['arrests'].mean()
+    sns.catplot(x='score_cat', y='arrests',
+                kind='bar', data=result.reset_index(), order=['field goal', 'one score', 'two score', 'blowout'])
+    plt.xlabel('Score Difference')
+    plt.ylabel('Average Arrests per Game')
+    plt.title('Arrests per Game Based on Score Difference')
+    plt.savefig('categorical_score_difference.png', bbox_inches='tight')
+
 
 def plot_overtime_arrests(df):
     """
@@ -231,9 +251,10 @@ def plot_overtime_arrests(df):
     """
     filtered = df[['arrests', 'OT_flag']]
     result = filtered.groupby('OT_flag')['arrests'].mean()
-    sns.catplot(x='OT_flag', y='arrests', kind='bar', 
+    sns.catplot(x='OT_flag', y='arrests', kind='bar',
                 data=result.reset_index())
-    plt.title("Average Arrests Compared to Whether or Not the Game Went into Overtime")
+    plt.title(
+        "Average Arrests Compared to Whether or Not the Game Went into Overtime")
     plt.xlabel('Overtime')
     plt.ylabel('Average Arrests')
     plt.savefig('overtime_arrest.png', bbox_inches='tight')
@@ -248,32 +269,33 @@ def plot_divisional_arrests(df):
     """
     filtered = df[['arrests', 'division_game']]
     result = filtered.groupby('division_game')['arrests'].mean()
-    sns.catplot(x='division_game', y='arrests', kind='bar', 
+    sns.catplot(x='division_game', y='arrests', kind='bar',
                 data=result.reset_index())
-    plt.title("Average Arrests Compared to Whether or Not the Game was a Divisional Matchup")
+    plt.title(
+        "Average Arrests Compared to Whether or Not the Game was a Divisional Matchup")
     plt.xlabel('Divisional Matchup')
     plt.ylabel('Average Arrests')
     plt.savefig('divisional_arrest.png', bbox_inches='tight')
+
 
 def main():
     sns.set()
     data = pd.read_csv('arrests.csv')
     data = make_booleans(data)
-    # yearly_average(data)
-    # weekly_average(data)
-    # plot_winning_arrests_season(data)
-    # plot_winning_arrests_total(data)
-    # plot_quartile_season_arrests(data)
-    # plot_day_of_week_arrests(data, False)
-    # plot_day_of_week_arrests(data, True)
-    # plot_time_of_game_arrests(data)
-    # plot_stadium_arrests(data)
-    # plot_home_team_win_arrests(data)
-    # plot_score_difference_arrests(data) 
-    # plot_overtime_arrests(data)
-    # plot_divisional_arrests(data)
+    yearly_average(data)
+    weekly_average(data)
+    plot_winning_arrests_season(data)
+    plot_winning_arrests_total(data)
+    plot_quartile_season_arrests(data)
+    plot_day_of_week_arrests(data, False)
+    plot_day_of_week_arrests(data, True)
+    plot_time_of_game_arrests(data)
+    plot_stadium_arrests(data)
+    plot_home_team_win_arrests(data)
+    plot_score_difference_arrests(data)
+    plot_overtime_arrests(data)
+    plot_divisional_arrests(data)
     categorical_score_difference(data)
-
 
 
 if __name__ == '__main__':
