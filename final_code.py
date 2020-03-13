@@ -278,6 +278,24 @@ def plot_divisional_arrests(df):
     plt.savefig('divisional_arrest.png', bbox_inches='tight')
 
 
+def test_all_functions():
+    data = pd.read_csv('TEST_DATA.csv')
+    data = make_booleans(data)
+    yearly_average(data)
+    weekly_average(data)
+    plot_winning_arrests_season(data)
+    plot_winning_arrests_total(data)
+    plot_quartile_season_arrests(data)
+    plot_day_of_week_arrests(data, False)
+    plot_day_of_week_arrests(data, True)
+    plot_time_of_game_arrests(data)
+    plot_stadium_arrests(data)
+    plot_home_team_win_arrests(data)
+    plot_score_difference_arrests(data)
+    plot_overtime_arrests(data)
+    plot_divisional_arrests(data)
+    categorical_score_difference(data)    
+
 def main():
     sns.set()
     data = pd.read_csv('arrests.csv')
@@ -296,6 +314,9 @@ def main():
     plot_overtime_arrests(data)
     plot_divisional_arrests(data)
     categorical_score_difference(data)
+    # to test all functions with smaller dataset 
+    # uncomment the line of code below.
+    # test_all_functions()
 
 
 if __name__ == '__main__':

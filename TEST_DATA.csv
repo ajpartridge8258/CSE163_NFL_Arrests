@@ -1,0 +1,6 @@
+season,week_num,day_of_week,gametime_local,home_team,away_team,home_score,away_score,OT_flag,arrests,division_game
+2015,17,Sunday,2:25:00 PM,Arizona,Seattle,6,36,,2,y
+2011,1,Sunday,1:05:00 PM,Baltimore,Pittsburgh,35,7,,1,y
+2012,15,Sunday,3:25:00 PM,Dallas,Pittsburgh,27,24,OT,13,n
+2012,7,Monday,7:30:00 PM,Chicago,Detroit,13,7,,1,y
+2011,12,Thursday,3:15:00 PM,Dallas,Miami,20,19,,0,n
