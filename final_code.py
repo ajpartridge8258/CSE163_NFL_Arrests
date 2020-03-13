@@ -279,6 +279,10 @@ def plot_divisional_arrests(df):
 
 
 def test_all_functions():
+     """
+    Tests all the previous functions with a smaller group of data. 
+    Makes it easy for user to tell all the functions are working.
+    """
     data = pd.read_csv('TEST_DATA.csv')
     data = make_booleans(data)
     yearly_average(data)
