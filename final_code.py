@@ -218,6 +218,9 @@ def plot_score_difference_arrests(df):
     plt.ylabel('Average Arrests')
     plt.savefig('score_difference_arrest.png', bbox_inches='tight')
 
+def categorical_score_difference(df):
+    df['score_difference'] = abs(df['home_score'] - df['away_score'])
+    print(df)
 
 def plot_overtime_arrests(df):
     """
@@ -256,19 +259,20 @@ def main():
     sns.set()
     data = pd.read_csv('arrests.csv')
     data = make_booleans(data)
-    yearly_average(data)
-    weekly_average(data)
-    plot_winning_arrests_season(data)
-    plot_winning_arrests_total(data)
-    plot_quartile_season_arrests(data)
-    plot_day_of_week_arrests(data, False)
-    plot_day_of_week_arrests(data, True)
-    plot_time_of_game_arrests(data)
-    plot_stadium_arrests(data)
-    plot_home_team_win_arrests(data)
-    plot_score_difference_arrests(data) 
-    plot_overtime_arrests(data)
-    plot_divisional_arrests(data)
+    # yearly_average(data)
+    # weekly_average(data)
+    # plot_winning_arrests_season(data)
+    # plot_winning_arrests_total(data)
+    # plot_quartile_season_arrests(data)
+    # plot_day_of_week_arrests(data, False)
+    # plot_day_of_week_arrests(data, True)
+    # plot_time_of_game_arrests(data)
+    # plot_stadium_arrests(data)
+    # plot_home_team_win_arrests(data)
+    # plot_score_difference_arrests(data) 
+    # plot_overtime_arrests(data)
+    # plot_divisional_arrests(data)
+    categorical_score_difference(data)
 
 
 
