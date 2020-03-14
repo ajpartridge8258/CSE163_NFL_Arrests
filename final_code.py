@@ -278,7 +278,13 @@ def plot_divisional_arrests(df):
 def test_all_functions():
     """
     Tests all the previous functions with a smaller group of data. 
-    Makes it easy for user to tell all the functions are working.
+    Makes it easy for user to tell all the functions are working. 
+    
+    The time of game function will not work for the TEST_DATA.csv 
+    file, because the x-axis labels are specific to the arrest.csv
+    file. The function will still be able to differentiate between 
+    the different times, but it will not be able to match the times 
+    to the correct labels.  
     """
     data = pd.read_csv('TEST_DATA.csv')
     data = make_booleans(data)
