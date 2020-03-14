@@ -1,3 +1,9 @@
+# Noah Adler (1831338) and Alison Partridge (1830803)
+# Section AE
+#
+# This file reads in a csv file of arrests at NFL stadiums during games and
+# creates plots and visualizations to  attempt to show trends in the data.
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -20,7 +26,7 @@ def yearly_average(data):
     for each year in the dataset.
     """
     df = data.groupby('season')['arrests'].mean()
-    sns.catplot(x='season', y='arrests', data=df.reset_index(), kind='bar', )
+    sns.catplot(x='season', y='arrests', data=df.reset_index(), kind='bar')
     plt.ylabel('average arrests')
     plt.title('Average Arrests per Game each Season')
     plt.savefig('yearly_average.png', bbox_inches='tight')
@@ -45,8 +51,8 @@ def weekly_average(data):
 
 def get_home_record(df, by_season=True):
     """
-    Takes in data and a boolean(set to True) of whether it should be grouped
-    by season or not, and groups rows by home team with a column
+    Takes in data and an optional boolean(set to True) of whether it should be
+    grouped by season or not, and groups rows by home team with a column
     showing their record and whether they were a winning team. Returns the
     filtered dataframe.
     """
@@ -86,7 +92,7 @@ def plot_winning_arrests_total(df):
     """
     Takes in the data and calls get_home_record() with by_season set to False.
     Then creates a bar plaot of the average arrests for the teams with a
-    winning home record over the 5 seasons vs teams witha  losing home record.
+    winning home record over the 5 seasons vs teams with a losing home record.
     """
     df = get_home_record(df, False)
     result = df.groupby('winning')['arrests'].mean()
@@ -105,7 +111,6 @@ def plot_quartile_season_arrests(df):
     average arrests per quartile of the season. The season
     is broken up into 4 quartiles: 1 (weeks 1-4), 2 (weeks 5-9),
     3 (weeks 10-14), 4 (weeks 15-17).
-
     """
     df['quartile'] = df['week_num']//5
     df['quartile'] = df['quartile'] + 1
@@ -125,7 +130,6 @@ def plot_day_of_week_arrests(df, no_wednesday):
     graph should include the one game played on Wednesday. 
     Then creates a bar plot of the average arrests per day of 
     the week.
-
     """
     filtered = df[['arrests', 'day_of_week']]
     if(no_wednesday):
@@ -147,7 +151,6 @@ def plot_time_of_game_arrests(df):
     Takes in the dataframe. Then creates a bar plot of the 
     average arrests per time of the game. The time of the 
     game is determined by the hour in which the game started.
-
     """
     df['time_of_game_hour'] = df['gametime_local'].astype(str)
     df['time_of_game_hour'] = df['time_of_game_hour'].str[:2]
@@ -168,7 +171,6 @@ def plot_stadium_arrests(df):
     """
     Takes in the dataframe. Then creates a bar plot of the 
     average arrests per NFL stadium. 
-
     """
     filtered = df[['home_team', 'arrests']]
     result = filtered.groupby('home_team')['arrests'].mean()
@@ -185,7 +187,6 @@ def plot_home_team_win_arrests(df):
     Takes in the dataframe. Then creates a bar plot of the 
     average arrests per whether or not the home team won 
     the game. 
-
     """
     df['home_team_win'] = df['home_score'] > df['away_score']
     filtered = df[['arrests', 'home_team_win']]
@@ -205,7 +206,6 @@ def plot_score_difference_arrests(df):
     is determined by the home team's score minus the away 
     team's score. Therefore, a negative score indicates a home 
     team loss.
-
     """
     df['score_difference'] = df['home_score'] - df['away_score']
     filtered = df[['arrests', 'score_difference']]
@@ -213,7 +213,7 @@ def plot_score_difference_arrests(df):
     sns.relplot(x='score_difference', y='arrests', kind='line',
                 data=result.reset_index())
     plt.title("Average Arrests Compared to Final Score Difference")
-    plt.xlabel('Final Score Difference (negative number implies a home team loss)')
+    plt.xlabel('Final Score Difference (negative implies home team loss)')
     plt.ylabel('Average Arrests')
     plt.savefig('score_difference_arrest.png', bbox_inches='tight')
 
@@ -235,7 +235,8 @@ def categorical_score_difference(df):
     df.loc[df['score_diff'] > 16, 'score_cat'] = 'blowout'
     result = df.groupby('score_cat')['arrests'].mean()
     sns.catplot(x='score_cat', y='arrests',
-                kind='bar', data=result.reset_index(), order=['field goal', 'one score', 'two score', 'blowout'])
+                kind='bar', data=result.reset_index(), order=['field goal',
+                                                              'one score', 'two score', 'blowout'])
     plt.xlabel('Score Difference')
     plt.ylabel('Average Arrests per Game')
     plt.title('Arrests per Game Based on Score Difference')
@@ -247,14 +248,12 @@ def plot_overtime_arrests(df):
     Takes in the dataframe. Then creates a bar plot of the 
     average arrests per whether or not the game went into 
     overtime.
-
     """
     filtered = df[['arrests', 'OT_flag']]
     result = filtered.groupby('OT_flag')['arrests'].mean()
     sns.catplot(x='OT_flag', y='arrests', kind='bar',
                 data=result.reset_index())
-    plt.title(
-        "Average Arrests Compared to Whether or Not the Game Went into Overtime")
+    plt.title('Average Arrests Vs Overtime')
     plt.xlabel('Overtime')
     plt.ylabel('Average Arrests')
     plt.savefig('overtime_arrest.png', bbox_inches='tight')
@@ -265,21 +264,19 @@ def plot_divisional_arrests(df):
     Takes in the dataframe. Then creates a bar plot of the 
     average arrests per whether or not the game was a 
     divisional game.
-
     """
     filtered = df[['arrests', 'division_game']]
     result = filtered.groupby('division_game')['arrests'].mean()
     sns.catplot(x='division_game', y='arrests', kind='bar',
                 data=result.reset_index())
-    plt.title(
-        "Average Arrests Compared to Whether or Not the Game was a Divisional Matchup")
+    plt.title('Average Arrests Vs Divisional Matchup')
     plt.xlabel('Divisional Matchup')
     plt.ylabel('Average Arrests')
     plt.savefig('divisional_arrest.png', bbox_inches='tight')
 
 
 def test_all_functions():
-     """
+    """
     Tests all the previous functions with a smaller group of data. 
     Makes it easy for user to tell all the functions are working.
     """
@@ -298,7 +295,8 @@ def test_all_functions():
     plot_score_difference_arrests(data)
     plot_overtime_arrests(data)
     plot_divisional_arrests(data)
-    categorical_score_difference(data)    
+    categorical_score_difference(data)
+
 
 def main():
     sns.set()
@@ -318,7 +316,7 @@ def main():
     plot_overtime_arrests(data)
     plot_divisional_arrests(data)
     categorical_score_difference(data)
-    # to test all functions with smaller dataset 
+    # to test all functions with smaller dataset
     # uncomment the line of code below.
     # test_all_functions()
 
